@@ -1,0 +1,17 @@
+<html><head>
+    <script type="module">
+        import { newCanvas } from './FieldDrawer.js'
+        import { ClassicalField } from './ClassicalField.js'
+
+        const sim = new ClassicalField(
+            window.innerWidth, window.innerHeight, 10000)
+        const cnv = newCanvas(window.innerWidth, window.innerHeight)
+        document.body.appendChild(cnv)
+        const ctx = cnv.getContext('2d')
+
+        const calcId = setInterval(() => sim.step(), 0)
+        const animId = setInterval(() => {
+            ctx.drawImage(sim.getDrawer().getCanvas(), 0, 0)
+        }, 20)
+    </script>
+</head></html>
