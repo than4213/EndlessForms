@@ -1,7 +1,6 @@
-import { FieldDrawer } from './FieldDrawer.js'
-
-const NEIGHBOR_MULT = 1 / (5 + 4 * Math.SQRT1_2)
+const NEIGHBOR_MULT = 1 / (4 + 4 * Math.SQRT1_2)
 const CORNER_MULT = NEIGHBOR_MULT * Math.SQRT1_2
+const DDX_MULT = 1 / (1 + Math.SQRT2)
 
 function mod(a, b) {
     return (a + b) % b
@@ -50,12 +49,18 @@ function stepParticles(particles, field) {
                 ddy += j * mult
             }
         }
-        particle.dx += ddx * .01
-        particle.dy += ddy * .01
-        particle.x = mod(particle.x + particle.dx, field.length)
-        particle.y = mod(particle.y + particle.dy, field[0].length)
+        particle.dx += ddx * DDX_MULT
+        particle.dy += ddy * DDX_MULT
+        const vMult = 1 / (1
+            + Math.sqrt(particle.dx * particle.dx + particle.dy * particle.dy))
+        const newX = particle.x + particle.dx * vMult
+        const newY = particle.y + particle.dy * vMult
+        particle.x = mod(newX, field.length)
+        particle.y = mod(newY, field[0].length)
     }
+}
 
+function mergeParticles(particles) {
     for (let i = 0; i < particles.length; i ++) {
         const xi = Math.floor(particles[i].x)
         const yi = Math.floor(particles[i].y)
@@ -87,10 +92,14 @@ export class ClassicalField {
         }
    
         this._particles = [ ]
+        const lowX = width * .05
+        const highX = width * .9
+        const lowY = height * .05
+        const highY = height * .9
         for (let i = 0; i < mass; i ++) {
             this._particles.push({
-                x: Math.random() * width,
-                y: Math.random() * height,
+                x: lowX + Math.random() * highX,
+                y: lowY + Math.random() * highY,
                 dx: 0,
                 dy: 0,
                 mass: 1
@@ -105,7 +114,11 @@ export class ClassicalField {
         stepParticles(this._particles, this._field)
     }
 
-    getDrawer() {
-        return new FieldDrawer(this._field, this._particles)
+    getField() {
+        return this._field
+    }
+
+    getParticles() {
+        return this._particles
     }
 }
