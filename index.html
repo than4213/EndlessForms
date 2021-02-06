@@ -1,20 +1,54 @@
-<html><head>
+<html>
+<head>
+    <link href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css" rel="stylesheet">
+    <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
     <script type="module">
-        import { FieldDrawer, newCanvas } from './FieldDrawer.js'
-        import { ClassicalField } from './ClassicalField.js'
+        import { generateData, step } from './NewtonianGravity.js'
+        import { createCanvas } from './PhysicsCanvas.js'
 
-        const sim = new ClassicalField(
-            window.innerWidth, window.innerHeight, 10000)
-        const drawer = new FieldDrawer(sim)
-        const cnv = newCanvas(window.innerWidth, window.innerHeight)
-        document.body.appendChild(cnv)
-        const ctx = cnv.getContext('2d')
+        const canvas = document.getElementById("canvas")
+        let paused = false
+        let data = generateData()
+        const ctx = canvas.getContext('2d')
+        setInterval(() => {
+            if (canvas.width !== canvas.clientWidth)
+                canvas.width = canvas.clientWidth
+            if (canvas.height !== canvas.clientHeight)
+                canvas.height = canvas.clientHeight
+            if (paused)
+                return
+            data = step(data, 1)
+            const buffer = createCanvas(data, canvas.width, canvas.height)
+            ctx.drawImage(buffer, 0, 0)
+        }, 16)
 
-        const calcId = setInterval(() => {
-            sim.step()
-        }, 0)
-        const animId = setInterval(() => {
-            ctx.drawImage(drawer.getCanvas(), 0, 0)
-        }, 100)
+        const toggle = document.getElementById("toggle")
+        const config = document.getElementById("config")
+        const dataText = document.getElementById("dataText")
+        toggle.addEventListener("click", () => {
+            paused = !paused
+            if (paused) {
+                toggle.classList.add("mdc-icon-button--on")
+                dataText.value = JSON.stringify(data)
+                config.style.display = 'inline-block'
+            } else {
+                toggle.classList.remove("mdc-icon-button--on")
+                data = JSON.parse(dataText.value)
+                config.style.display = 'none'
+            }
+        });
     </script>
-</head></html>
+</head>
+<body style="margin: 0; height: 100;">
+    <canvas id="canvas" style="position: absolute; width: 100%; height: 100%; z-index: -1;"></canvas>
+    <button id="toggle" class="mdc-icon-button" style="display: inline-block; vertical-align: top;">
+        <i class="material-icons mdc-icon-button__icon" style="color: red;">pause</i>
+        <i class="material-icons mdc-icon-button__icon mdc-icon-button__icon--on" style="color: green;">play_arrow</i>
+    </button>
+    <div id="config" style="display: none; background-color: white;">
+        <textarea id="dataText" rows="4" cols="50"></textarea>
+    </div>
+</body>
+</html>
