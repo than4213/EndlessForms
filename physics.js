@@ -1,30 +1,15 @@
-export function generateData() {
-    const SIZE = 1000
-    const QUANTITY = 1000
-
-    const response = new Array(QUANTITY)
-    for (let i = 0; i < QUANTITY; i ++) {
-        response[i] = {
-            position: [ (Math.random() - .5) * SIZE, (Math.random() - .5) * SIZE, (Math.random() - .5) * SIZE ],
-            velocity: [ 0, 0, 0 ],
-            mass: 1
-        }
-    }
-    return response
+export function step(data) {
+    return collide(move(gravity(data)))
 }
 
-export function step(data, strength) {
-    return collide(move(gravity(data, strength)))
-}
-
-export function gravity(data, strength) {
+export function gravity(data) {
     const response = data.map((d) => ({ ...d }))
     for (let i = 0; i < response.length; i ++) {
         const objI = response[i]
         for (let j = i + 1; j < response.length; j ++) {
             const objJ = response[j]
             const { delta, distance2 } = getDistance2(objI.position, objJ.position);
-            const multiplier = strength * Math.pow(distance2, -1.5)
+            const multiplier = Math.pow(distance2, -1.5)
             const multI = multiplier * objJ.mass
             objI.velocity = objI.velocity.map((v, k) => v + delta[k] * multI)
             const multJ = multiplier * objI.mass
