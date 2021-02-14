@@ -22,3 +22,23 @@ export function replicate(size, callback) {
     }
     return response
 }
+
+export function lSubtract(vector1, vector2) {
+    return vector1.map((v1, i) => v1 - vector2[i])
+}
+
+export function lMagnitude2(vector) {
+    return vector.reduce((mag, v) => mag + v * v, 0)
+}
+
+export function deepClone(data) {
+    const response = data
+    if (Array.isArray(data)) {
+        return data.map((d) => deepClone(d))
+    } else if (data && typeof data === 'object') {
+        const response = { }
+        for (const key in data)
+            response[key] = deepClone(data[key])
+    }
+    return response
+}

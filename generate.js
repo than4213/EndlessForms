@@ -9,16 +9,18 @@ export const generators = {
         const yLength = Math.ceil(height / scale)
         field = replicate(xLength, () => replicate(yLength, () => [ 0, 0 ]))
 
-        return { field, particles: this.Particles([ width, height ])}
+        return { ...this.Particles([ width, height ]), field }
     },
 
     Particles(dimensions) {
         const QUANTITY = 1000
 
-        return replicate(QUANTITY, () => ({
+        const particles = replicate(QUANTITY, () => ({
             position: dimensions.map((dim) => (Math.random() - .5) * dim),
             velocity: dimensions.map(() => Math.random() - .5),
             mass: 1
         }))
+
+        return { particles }
     },
 }

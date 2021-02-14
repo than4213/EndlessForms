@@ -1,5 +1,6 @@
 import { generators } from './generate.js'
 import { simulations } from './simulate.js'
+import { clickHandlers } from './events.js'
 import { el, updateSize } from './util.js'
 
 function pausedStyles(toggle, config) {
@@ -50,6 +51,10 @@ class EndlessForms extends HTMLElement {
                 playStyles(toggle, config)
                 data = JSON.parse(dataText.value)
             }
+        })
+
+        canvas.addEventListener('click', (e) => {
+            data = clickHandlers.NewtonianGravity(e, data)
         })
     }
 }

@@ -18,12 +18,13 @@ export const simulations = {
     },
 }
 
-function drawParticles(canvas, data) {
+function drawParticles(canvas, { particles, green, red }) {
     const ctx = canvas.getContext('2d')
-    ctx.fillStyle = "white";
     const midW = canvas.width * .5
     const midH = canvas.height * .5
-    for (const { position: [ x, y ], mass } of data) {
+    for (let i = 0; i < particles.length; i ++) {
+        const { position: [ x, y ], mass } = particles[i] 
+        ctx.fillStyle = i === green ? 'green' : i === red ? 'red' : 'white';
         ctx.beginPath()
         ctx.arc(x + midW, y + midH, Math.cbrt(mass), 0, PI2)
         ctx.fill()
