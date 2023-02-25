@@ -1,4 +1,3 @@
-import { simulations } from './simulate.js'
 import { el, updateSize } from './util.js'
 
 function pausedStyles(toggle, config) {
@@ -11,12 +10,6 @@ function playStyles(toggle, config) {
     toggle.style.clip = 'rect(35px, 145px, 85px, 95px)'
     toggle.style.left = '-95px'
     config.style.display = 'none'
-}
-
-function step(canvas, data) {
-    const { canvas: c, data: d } = simulations.NewtonianGravity(data, canvas.width, canvas.height)
-    canvas.getContext('2d').drawImage(c, 0, 0)
-    return d
 }
 
 export default class EndlessForms extends HTMLElement {
@@ -33,11 +26,13 @@ export default class EndlessForms extends HTMLElement {
 
         let paused = false
         let data = this.generate([ canvas.clientWidth, canvas.clientHeight ])
-        const ctx = canvas.getContext('2d')
         setInterval(() => {
             updateSize(canvas)
-            if (!paused)
-                data = step(canvas, data)
+            if (!paused) {
+                const response = this.simulate(data, canvas.width, canvas.height)
+                data = response.data
+                canvas.getContext('2d').drawImage(response.canvas, 0, 0)
+            }
          }, 16)
         
         toggle.addEventListener("click", () => {
