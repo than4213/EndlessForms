@@ -1,4 +1,3 @@
-import { generators } from './generate.js'
 import { simulations } from './simulate.js'
 import { clickHandlers } from './events.js'
 import { el, updateSize } from './util.js'
@@ -21,7 +20,7 @@ function step(canvas, data) {
     return d
 }
 
-class EndlessForms extends HTMLElement {
+export default class EndlessForms extends HTMLElement {
     connectedCallback() {
         const canvas = el('canvas',
             { style: 'width: 100%; height: 100%; z-index: -1;' })
@@ -34,7 +33,7 @@ class EndlessForms extends HTMLElement {
         this.attachShadow({ mode: 'closed' }).append(canvas, toggle, config)
 
         let paused = false
-        let data = generators.Particles([ canvas.clientWidth, canvas.clientHeight ])
+        let data = this.generate([ canvas.clientWidth, canvas.clientHeight ])
         const ctx = canvas.getContext('2d')
         setInterval(() => {
             updateSize(canvas)
@@ -58,4 +57,3 @@ class EndlessForms extends HTMLElement {
         })
     }
 }
-customElements.define('endless-forms', EndlessForms);
