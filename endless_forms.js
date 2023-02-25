@@ -1,5 +1,4 @@
 import { simulations } from './simulate.js'
-import { clickHandlers } from './events.js'
 import { el, updateSize } from './util.js'
 
 function pausedStyles(toggle, config) {
@@ -53,7 +52,7 @@ export default class EndlessForms extends HTMLElement {
         })
 
         canvas.addEventListener('click', (e) => {
-            data = clickHandlers.NewtonianGravity(e, data)
+            data = this.clickHandler(e, data)
         })
     }
 }
