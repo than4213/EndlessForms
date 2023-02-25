@@ -4,7 +4,7 @@ import { lMagnitude2, lSubtract, replicate } from './util.js'
 
 const PI2 = 2 * Math.PI
 
-export class NewtonianGravity extends EndlessForms {
+class NewtonianGravity extends EndlessForms {
     generate(dimensions) {
         const QUANTITY = 1000
 
@@ -35,14 +35,14 @@ export class NewtonianGravity extends EndlessForms {
         canvas.width = width
         canvas.height = height
         const ctx = canvas.getContext('2d')
-        ctx.fillStyle = "black";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = "black"
+        ctx.fillRect(0, 0, canvas.width, canvas.height)
 
         drawParticles(canvas, data)
         return { data, canvas }
     }
 }
-customElements.define('newtonian-gravity', NewtonianGravity);
+customElements.define('newtonian-gravity', NewtonianGravity)
 
 function drawParticles(canvas, { particles, green, red }) {
     const ctx = canvas.getContext('2d')
@@ -50,7 +50,7 @@ function drawParticles(canvas, { particles, green, red }) {
     const midH = canvas.height * .5
     for (let i = 0; i < particles.length; i ++) {
         const { position: [ x, y ], mass } = particles[i] 
-        ctx.fillStyle = i === green ? 'green' : i === red ? 'red' : 'white';
+        ctx.fillStyle = i === green ? 'green' : i === red ? 'red' : 'white'
         ctx.beginPath()
         ctx.arc(x + midW, y + midH, Math.cbrt(mass), 0, PI2)
         ctx.fill()

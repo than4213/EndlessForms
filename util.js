@@ -28,7 +28,7 @@ export function lSubtract(vector1, vector2) {
 }
 
 export function lMagnitude2(vector) {
-    return vector.reduce((mag, v) => mag + v * v, 0)
+    return vector.reduce((mag, v) => mag + v * v)
 }
 
 export function deepClone(data) {

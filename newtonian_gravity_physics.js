@@ -16,7 +16,7 @@ function newtonianGravities({ particles }) {
 
 function newtonianGravity(part1, part2) {
     const delta = lSubtract(part2.position, part1.position)
-    const distance2 = lMagnitude2(delta);
+    const distance2 = lMagnitude2(delta)
     const multiplier = Math.pow(distance2, -1.5)
     const multI = multiplier * part2.mass
     part1.velocity = part1.velocity.map((v, k) => v + delta[k] * multI)
@@ -35,7 +35,7 @@ function collisions(data) {
         let radiusI = Math.cbrt(partI.mass)
         for (let j = i + 1; j < data.particles.length; j ++) {
             const partJ = data.particles[j]
-            const distance2 = lMagnitude2(lSubtract(partJ.position, partI.position));
+            const distance2 = lMagnitude2(lSubtract(partJ.position, partI.position))
             const radiusTot = radiusI + Math.cbrt(partJ.mass)
             if (distance2 < radiusTot * radiusTot) {
                 collide(partI, partJ)

@@ -50,4 +50,6 @@ export default class EndlessForms extends HTMLElement {
             data = this.clickHandler(e, data)
         })
     }
+
+    clickHandler() { }
 }
