@@ -1,8 +1,119 @@
 <html>
 <head>
-    <script type="module" src="./quantum_field_element.js"></script>
+  <link rel="stylesheet" href="./endless_forms_demo.css">
+
+  <script type="module" src="./newtonian_gravity_element.js"></script>
+  <script type="module" src="./two_slit_element.js"></script>
+  <script type="module" src="./binomial_distribution_element.js"></script>
+
+  <script>
+    function onPause() {
+        getSim().pause()
+        document.getElementById('pause_btn').classList.add("page_hidden")
+        document.getElementById('config').classList.remove("page_hidden")
+    }
+    function onPlay() {
+        setConfig()
+        getSim().play()
+        document.getElementById('pause_btn').classList.remove("page_hidden")
+        document.getElementById('config').classList.add("page_hidden")
+    }
+    function onReset() {
+        setConfig()
+        getSim().reset()
+    }
+    function onCopy() {
+        navigator.clipboard.writeText(getSim().getData())
+    }
+    async function onPaste() {
+        getSim().setData(await navigator.clipboard.readText())
+    }
+
+    let selected = 'two_slit'
+    function selectSim(name) {
+        const oldSelector = getSelector()
+        oldSelector.classList.remove("menu_hidden")
+        oldSelector.classList.add("menu_button")
+        getSim().classList.add("page_hidden")
+        getConfig().classList.add("menu_hidden")
+
+        selected = name
+
+        const newSelector = getSelector()
+        newSelector.classList.remove("menu_button")
+        newSelector.classList.add("menu_hidden")
+        getConfig().classList.remove("menu_hidden")
+        getSim().classList.remove("page_hidden")
+    }
+    function getSim() {
+        return document.getElementById(selected)
+    }
+    function getSelector() {
+        return document.getElementById("select_" + selected)
+    }
+    function getConfig() {
+        return document.getElementById(selected + "_config")
+    }
+
+    function setConfig() {
+        const config = selected == 'two_slit' ? twoSlitConfig()
+          : 'newtonian_gravity' ? newtonianGravityConfig()
+          : { }
+        return getSim().setConfig(config)
+    }
+    function twoSlitConfig() {
+        return {
+            force: parseFloat(document.getElementById("two_slit_force").value),
+            wavelength: parseInt(document.getElementById("two_slit_wavelength").value),
+            amplitude: parseInt(document.getElementById("two_slit_amplitude").value),
+        }
+    }
+    function newtonianGravityConfig() {
+        return { quantity: parseInt(document.getElementById("newtonian_gravity_quantity").value) }
+    }
+
+    window.onload = function() {
+        onPlay()
+    }
+  </script>
 </head>
-<body style="margin: 0; height: 100%;">
-    <quantum-field></quantum-field>
+<body>
+  <two-slit id="two_slit" class="page simulation"></two-slit>
+  <newtonian-gravity id="newtonian_gravity" class="page simulation page_hidden">
+  </newtonian-gravity>
+  <binomial-distribution id="binomial_distribution" class="page simulation page_hidden">
+  </binomial-distribution>
+  <button id="pause_btn" class="page page_hidden" onclick="onPause()">Pause</button>
+  <div id="config" class="page">
+    <button onclick="onPlay()">Play</button>
+    <div class="menu">
+      <button class="menu_button" onclick="onReset()">Reset</button>
+      <button class="menu_button" onclick="onCopy()">Copy to Clipboard</button>
+      <button class="menu_button" onclick="onPaste()">Paste from Clipboard</button>
+      <button id="select_two_slit" class="menu_hidden" onclick="selectSim('two_slit')">
+        Two Slit
+      </button>
+      <button id="select_newtonian_gravity"
+              class="menu_button"
+              onclick="selectSim('newtonian_gravity')">
+        Newtonian Gravity
+      </button>
+      <button id="select_binomial_distribution" class="menu_button" onclick="selectSim('binomial_distribution')">
+        Binomial Distribution
+      </button>
+      <div id="two_slit_config">
+        <div>Force: <input type="number" id="two_slit_force" min="0" value=".1"></div>
+        <div>Wavelength: <input type="number" id="two_slit_wavelength" min="1" value="8"></div>
+        <div>Amplitude: <input type="number" id="two_slit_amplitude" min="1" value="1"></div>
+      </div>
+      <div id="newtonian_gravity_config" class="menu_hidden">
+        <div>
+          Quantity:
+          <input type="number" id="newtonian_gravity_quantity" min="1" value="1000">
+        </div>
+      </div>
+      <div id="binomial_distribution_config"></div>
+    </div>
+  </div>
 </body>
 </html>

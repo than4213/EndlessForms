@@ -1,4 +1,14 @@
-import { lSubtract, lMagnitude2, deepClone } from './util.js'
+import { lSubtract, lMagnitude2, deepClone, replicate } from './util.js'
+
+export function generate(dimensions, quantity) {
+    const particles = replicate(quantity, () => ({
+        position: dimensions.map((dim) => (Math.random() - .5) * dim),
+        velocity: dimensions.map(() => Math.random() - .5),
+        mass: 1
+    }))
+
+    return { particles }
+}
 
 export function step(data) {
     const response = deepClone(data)
