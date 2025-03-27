@@ -57,7 +57,8 @@
 
     function setConfig() {
         const config = selected == 'two_slit' ? twoSlitConfig()
-          : 'newtonian_gravity' ? newtonianGravityConfig()
+          : selected == 'newtonian_gravity' ? newtonianGravityConfig()
+          : selected == 'binomial_distribution' ? binomialDistributionConfig()
           : { }
         return getSim().setConfig(config)
     }
@@ -70,6 +71,9 @@
     }
     function newtonianGravityConfig() {
         return { quantity: parseInt(document.getElementById("newtonian_gravity_quantity").value) }
+    }
+    function binomialDistributionConfig() {
+        return { p: parseFloat(document.getElementById("binomial_distribution_p").value) }
     }
 
     window.onload = function() {
@@ -112,7 +116,12 @@
           <input type="number" id="newtonian_gravity_quantity" min="1" value="1000">
         </div>
       </div>
-      <div id="binomial_distribution_config"></div>
+      <div id="binomial_distribution_config">
+        <div>
+          P:
+          <input type="number" id="binomial_distribution_p" min="0" max="1" value=".5"></div>
+        </div>
+      </div>
     </div>
   </div>
 </body>
